@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rain</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="option">
+        <button>reset</button>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        // function bind
+        function bind(attribute, min, max, step){
+            option = document.getElementById('option');
+            const value = window.application[attribute];
+            const slider = document.createElement('input');
+            slider.setAttribute('type', 'range');
+            slider.setAttribute('min', min);
+            slider.setAttribute('max', max);
+            slider.setAttribute('step', step);
+            slider.setAttribute('value', value);
+            slider.setAttribute('class', 'slider');
+            slider.setAttribute('id', attribute);
+            option.appendChild(slider);
+            const span = document.createElement('span');
+            span.innerHTML = attribute + ' = ';
+            option.appendChild(span);
+            const spanValue = document.createElement('span');
+            spanValue.setAttribute('id', attribute + 'Value');
+            spanValue.innerHTML = value;
+            option.appendChild(spanValue);
+            slider.oninput = function() {
+                spanValue.innerHTML = this.value;
+                window.application[attribute] = this.value;
+            }
+        }
+        bind('startPostion', -1.0, 1.0, 0.01);
+        bind('k', 0, 0.2, 0.001);
+        bind('density', 0, 0.2, 0.001);
+        bind('spread', 0, 1, 0.01);
+        bind('piova', 0, 200, 1);
+        bind('raindropVelocity', 0.01, 1, 0.01);
+        bind('windVelocity', -0.1, 0.1, 0.001);
+        const resetButton = document.querySelector("button");
+        resetButton.onclick = function() {
+            window.application.reset();
+        }
+    </script>
+</body>
+</html>

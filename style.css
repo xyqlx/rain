@@ -1,0 +1,28 @@
+#canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#option {
+    position: absolute;
+    top: 20px;
+    left: 50px;
+    right: 50px;
+    height: 50px;
+    background-color: #fff;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ffffff;
+    box-shadow: 0 0 5px #636363;
+    padding: 10px;
+}
+
+body {
+    background-color: #cfcfcf;
+    margin: 0;
+    padding: 0;
+}
