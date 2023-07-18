@@ -2,6 +2,8 @@
 
 > Chris, is it raining again there?
 
+https://github.com/xyqlx/rain/assets/40012783/f420a09e-f298-4516-a2aa-5285a6227b76
+
 ## How to run
 
 open `index.html` in your browser
