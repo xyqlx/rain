@@ -37,6 +37,8 @@ open `index.html` in your browser
 
 [Realistic raindrop effect](https://github.com/codrops/RainEffect)
 
+[Animated Rainy Window wallpaper](https://github.com/rocksdanister/rain)
+
 [Another realistic effect](https://github.com/jxa/rain)
 
 [Particle rain effect](https://github.com/akella/ParticleRainEffect)
