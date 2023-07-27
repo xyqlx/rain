@@ -44,3 +44,7 @@ open `index.html` in your browser
 [Particle rain effect](https://github.com/akella/ParticleRainEffect)
 
 [Rainy Mood: Rain Sounds for Sleep & Study](https://www.rainymood.com/)
+
+[Rain.today](https://rain.today/)
+
+[Frequency-Shaped Natural Rain Noise Generator in mynoise](https://mynoise.net/NoiseMachines/rainNoiseGenerator.php)
