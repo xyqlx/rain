@@ -43,6 +43,8 @@ open `index.html` in your browser
 
 [Particle rain effect](https://github.com/akella/ParticleRainEffect)
 
+[Procedural rain generation using PixiJS](https://github.com/ZeroDawn0D/pixirain)
+
 [Rainy Mood: Rain Sounds for Sleep & Study](https://www.rainymood.com/)
 
 [Rain.today](https://rain.today/)
