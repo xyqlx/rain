@@ -38,7 +38,7 @@
             option.appendChild(container);
             slider.oninput = function() {
                 spanValue.innerHTML = this.value;
-                window.application[attribute] = this.value;
+                window.application[attribute] = parseFloat(this.value);
             }
         }
         bind('startPostion', -1.0, 1.0, 0.01);
