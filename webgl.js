@@ -186,7 +186,7 @@ class RainApplication {
             const newRaindropsPositionY = [];
             const newRaindropsSize = [];
             const fpsFactor = 30 / this.fps;
-            console.log(this.raindropsPositionX.length)
+            // console.log(this.raindropsPositionX.length)
             if (this.raindropsPositionX.length < this.maxRaindrops) {
                 for (let i = 0; i < this.raindropsPositionY.length; i++) {
                     this.raindropsPositionY[i] -= this.raindropVelocity * fpsFactor;
@@ -198,7 +198,7 @@ class RainApplication {
                     else if (index >= this.waveNumber) {
                         index = this.waveNumber - 1;
                     }
-                    if (this.raindropsPositionY[i] < this.springPostion[index]) {
+                    if (this.raindropsPositionY[i] < this.springPostion[index] || this.raindropsPositionY[i] < -1.0) {
                         this.splash(this.raindropsPositionX[i], -this.raindropsSize[i]);
                     } else {
                         newRaindropsPositionX.push(this.raindropsPositionX[i]);
@@ -267,6 +267,10 @@ class RainApplication {
     reset() {
         this.springPostion = Array(this.waveNumber).fill(this.startPostion);
         this.springVelocity = Array(this.waveNumber).fill(0);
+        // remove all raindrops
+        this.raindropsPositionX = [];
+        this.raindropsPositionY = [];
+        this.raindropsSize = [];
     }
 
     stop() {

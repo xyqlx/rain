@@ -22,6 +22,7 @@ open `index.html` in your browser
 
 ## Problems
 
+- clicking reset button after changing start position will destroy the animation (why?)
 - If you toggle the page to background and then toggle back, the animation may be paused
 - I don't know what's the best parameters for the simulation
 

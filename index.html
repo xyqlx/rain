@@ -25,14 +25,17 @@
             slider.setAttribute('value', value);
             slider.setAttribute('class', 'slider');
             slider.setAttribute('id', attribute);
-            option.appendChild(slider);
             const span = document.createElement('span');
             span.innerHTML = attribute + ' = ';
-            option.appendChild(span);
+            const container = document.createElement('div');
+            container.setAttribute('class', 'option-container');
+            container.appendChild(slider);
+            container.appendChild(span);
             const spanValue = document.createElement('span');
             spanValue.setAttribute('id', attribute + 'Value');
             spanValue.innerHTML = value;
-            option.appendChild(spanValue);
+            container.appendChild(spanValue);
+            option.appendChild(container);
             slider.oninput = function() {
                 spanValue.innerHTML = this.value;
                 window.application[attribute] = this.value;
