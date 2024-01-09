@@ -131,11 +131,12 @@ class RainApplication {
     a_Color = null;
     piova = 50;
     maxRaindrops = 1000;
+    actualFPS = 60;
+    recent10Intervals = [];
+    timeConsumption = [0, 0, 0, 0];
 
     start() {
-        this.requestAnimationFrameHandle = requestAnimationFrame((timeStamp) => {
-            this.update(timeStamp);
-        });
+        this.requestAnimationFrameHandle = requestAnimationFrame((timeStamp) => this.update(timeStamp));
     }
 
     drawWater() {
@@ -173,7 +174,13 @@ class RainApplication {
             this.lastTime = timeStamp;
         }
         if (timeStamp - this.lastTime > 1000 / this.fps - this.tolerance) {
+            this.recent10Intervals.push(timeStamp - this.lastTime);
             this.lastTime = timeStamp;
+            // update fps
+            if (this.recent10Intervals.length > 10) {
+                this.recent10Intervals.shift();
+            }
+            this.actualFPS = 1000 / (this.recent10Intervals.reduce((a, b) => a + b) / this.recent10Intervals.length);
             // update raindrops
             const rainPosibility = this.piova / this.fps;
             const rainNumber = Math.floor(rainPosibility) + (Math.random() < rainPosibility - Math.floor(rainPosibility) ? 1 : 0);

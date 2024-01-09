@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rain</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <canvas id="canvas"></canvas>
     <div id="option">
+        <span>FPS: </span>
+        <span id="fps"></span>
         <button>reset</button>
     </div>
     <script src="webgl.js"></script>
     <script>
         // function bind
-        function bind(attribute, min, max, step){
+        function bind(attribute, min, max, step) {
             option = document.getElementById('option');
             const value = window.application[attribute];
             const slider = document.createElement('input');
@@ -36,7 +40,7 @@
             spanValue.innerHTML = value;
             container.appendChild(spanValue);
             option.appendChild(container);
-            slider.oninput = function() {
+            slider.oninput = function () {
                 spanValue.innerHTML = this.value;
                 window.application[attribute] = parseFloat(this.value);
             }
@@ -49,9 +53,13 @@
         bind('raindropVelocity', 0.01, 1, 0.01);
         bind('windVelocity', -0.1, 0.1, 0.001);
         const resetButton = document.querySelector("button");
-        resetButton.onclick = function() {
+        resetButton.onclick = function () {
             window.application.reset();
         }
+        setInterval(function () {
+            document.getElementById('fps').innerHTML = window.application.actualFPS.toFixed(2);
+        }, 1000);
     </script>
 </body>
+
 </html>

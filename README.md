@@ -25,6 +25,10 @@ open `index.html` in your browser
 - If you toggle the page to background and then toggle back, the animation may be paused
 - I don't know what's the best parameters for the simulation
 
+## Performance issues
+
+When the value of `piova` is up to 500, the FPS will drop obviously. Since I'm not familiar with WebGL, maybe there are some ways to improve the performance.
+
 ## Reference
 
 [d-harel/raindrops](https://github.com/d-harel/raindrops)
