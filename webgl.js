@@ -130,10 +130,11 @@ class RainApplication {
     a_Position = null;
     a_Color = null;
     piova = 50;
-    maxRaindrops = 1000;
+    maxRaindrops = 16384;
     actualFPS = 60;
     recent10Intervals = [];
     timeConsumption = [0, 0, 0, 0];
+    currentRaindropNumber = 0;
 
     start() {
         this.requestAnimationFrameHandle = requestAnimationFrame((timeStamp) => this.update(timeStamp));
@@ -150,20 +151,48 @@ class RainApplication {
     drawRaindrops() {
         const gl = this.gl;
         const rainSizeFactor = 1920 / this.canvas.width * 0.01;
+        // for (let i = 0; i < this.raindropsPositionX.length; i++) {
+        //     const x = this.raindropsPositionX[i];
+        //     const y = this.raindropsPositionY[i];
+        //     const size = this.raindropsSize[i];
+        //     const vertices = new Float32Array([
+        //         x - size * rainSizeFactor, y, 0.6, 0.6, 0.6,
+        //         x, y - size * rainSizeFactor, 0.6, 0.6, 0.6,
+        //         x + size * rainSizeFactor, y, 0.6, 0.6, 0.6,
+        //         x - size * rainSizeFactor * 20 * this.windVelocity / this.raindropVelocity, y + size * rainSizeFactor * 20, 0.7, 0.7, 0.7,
+        //     ]);
+        //     gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+        //     // draw triangle
+        //     gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
+        // }
+        const vertices = new Float32Array(this.raindropsPositionX.length * 5 * 6);
         for (let i = 0; i < this.raindropsPositionX.length; i++) {
             const x = this.raindropsPositionX[i];
             const y = this.raindropsPositionY[i];
             const size = this.raindropsSize[i];
-            const vertices = new Float32Array([
-                x - size * rainSizeFactor, y, 0.6, 0.6, 0.6,
-                x, y - size * rainSizeFactor, 0.6, 0.6, 0.6,
-                x + size * rainSizeFactor, y, 0.6, 0.6, 0.6,
-                x - size * rainSizeFactor * 20 * this.windVelocity / this.raindropVelocity, y + size * rainSizeFactor * 20, 0.7, 0.7, 0.7,
-            ]);
-            gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-            // draw triangle
-            gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
+            vertices[i*30] = x - size * rainSizeFactor;
+            vertices[i*30+1] = y;
+            vertices[i*30+5] = x;
+            vertices[i*30+6] = y - size * rainSizeFactor;
+            vertices[i*30+10] = x - size * rainSizeFactor * 20 * this.windVelocity / this.raindropVelocity;
+            vertices[i*30+11] = y + size * rainSizeFactor * 20;
+
+            vertices[i*30+15] = x + size * rainSizeFactor;
+            vertices[i*30+16] = y;
+            vertices[i*30+20] = x;
+            vertices[i*30+21] = y - size * rainSizeFactor;
+            vertices[i*30+25] = x - size * rainSizeFactor * 20 * this.windVelocity / this.raindropVelocity;
+            vertices[i*30+26] = y + size * rainSizeFactor * 20;
+
+            for(let j = 0; j < 6; j++) {
+                vertices[i*30+j*5+2] = 0.6 + 0.1 * (j % 3 === 2 ? 1 : 0);
+                vertices[i*30+j*5+3] = 0.6 + 0.1 * (j % 3 === 2 ? 1 : 0);;
+                vertices[i*30+j*5+4] = 0.6 + 0.1 * (j % 3 === 2 ? 1 : 0);;
+            }
         }
+        gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+        // draw triangle
+        gl.drawArrays(gl.TRIANGLES, 0, vertices.length / 5);
     }
 
     update(timeStamp) {
@@ -194,29 +223,34 @@ class RainApplication {
             const newRaindropsSize = [];
             const fpsFactor = 30 / this.fps;
             // console.log(this.raindropsPositionX.length)
-            if (this.raindropsPositionX.length < this.maxRaindrops) {
-                for (let i = 0; i < this.raindropsPositionY.length; i++) {
-                    this.raindropsPositionY[i] -= this.raindropVelocity * fpsFactor;
-                    this.raindropsPositionX[i] += this.windVelocity * fpsFactor;
-                    let index = Math.floor((this.raindropsPositionX[i] + 1.0) / 2.0 * this.waveNumber);
-                    if (index < 0) {
-                        index = 0;
-                    }
-                    else if (index >= this.waveNumber) {
-                        index = this.waveNumber - 1;
-                    }
-                    if (this.raindropsPositionY[i] < this.springPostion[index] || this.raindropsPositionY[i] < -1.0) {
-                        this.splash(this.raindropsPositionX[i], -this.raindropsSize[i]);
-                    } else {
-                        newRaindropsPositionX.push(this.raindropsPositionX[i]);
-                        newRaindropsPositionY.push(this.raindropsPositionY[i]);
-                        newRaindropsSize.push(this.raindropsSize[i]);
-                    }
+            for (let i = 0; i < this.raindropsPositionY.length; i++) {
+                this.raindropsPositionY[i] -= this.raindropVelocity * fpsFactor;
+                this.raindropsPositionX[i] += this.windVelocity * fpsFactor;
+                let index = Math.floor((this.raindropsPositionX[i] + 1.0) / 2.0 * this.waveNumber);
+                if (index < 0) {
+                    index = 0;
                 }
-                this.raindropsPositionX = newRaindropsPositionX;
-                this.raindropsPositionY = newRaindropsPositionY;
-                this.raindropsSize = newRaindropsSize;
+                else if (index >= this.waveNumber) {
+                    index = this.waveNumber - 1;
+                }
+                if (this.raindropsPositionY[i] < this.springPostion[index] || this.raindropsPositionY[i] < -1.0) {
+                    this.splash(this.raindropsPositionX[i], -this.raindropsSize[i]);
+                } else {
+                    newRaindropsPositionX.push(this.raindropsPositionX[i]);
+                    newRaindropsPositionY.push(this.raindropsPositionY[i]);
+                    newRaindropsSize.push(this.raindropsSize[i]);
+                }
             }
+            this.raindropsPositionX = newRaindropsPositionX;
+            this.raindropsPositionY = newRaindropsPositionY;
+            this.raindropsSize = newRaindropsSize;
+            // limit raindrops number
+            if(this.raindropsPositionX.length > this.maxRaindrops) {
+                this.raindropsPositionX = this.raindropsPositionX.slice(0, this.maxRaindrops);
+                this.raindropsPositionY = this.raindropsPositionY.slice(0, this.maxRaindrops);
+                this.raindropsSize = this.raindropsSize.slice(0, this.maxRaindrops);
+            }
+            this.currentRaindropNumber = this.raindropsPositionX.length;
             // spring
             for (let i = 1; i < this.waveNumber - 1; i++) {
                 const x = this.springPostion[i] - this.startPostion;
