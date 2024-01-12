@@ -16,7 +16,7 @@ open `index.html` in your browser
 | k | the stiffness of the spring |
 | density |  the dampening factor |
 | spread | how fast the waves spread |
-| piova | the amount of raindrops |
+| piova | the amount of raindrops generated per second |
 | raindropVelocity | the vertical velocity of rain |
 | windVelocity | the horizontal velocity of rain |
 
@@ -27,7 +27,9 @@ open `index.html` in your browser
 
 ## Performance issues
 
-When the value of `piova` is up to 500, the FPS will drop obviously. Since I'm not familiar with WebGL, maybe there are some ways to improve the performance.
+~~When the value of `piova` is up to 500, the FPS will drop obviously. Since I'm not familiar with WebGL, maybe there are some ways to improve the performance.~~
+
+I change 'draw gl.TRIANGLE_FAN in a for loop' to 'draw gl.TRIANGLES in a single call', and the performance is improved a lot😙, now it can process more than 10000 piova easily.
 
 ## Reference
 
@@ -54,3 +56,8 @@ When the value of `piova` is up to 500, the FPS will drop obviously. Since I'm n
 [Rain.today](https://rain.today/)
 
 [Frequency-Shaped Natural Rain Noise Generator in mynoise](https://mynoise.net/NoiseMachines/rainNoiseGenerator.php)
+
+## TODO
+
+- [ ] Modify the UI to provide a way beyond the limitations of the slider
+- [ ] Bind parameters to URL query part
