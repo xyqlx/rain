@@ -13,6 +13,8 @@
     <div id="option">
         <span>FPS: </span>
         <span id="fps"></span>
+        <span>raindrops: </span>
+        <span id="raindrops"></span>
         <button>reset</button>
     </div>
     <script src="webgl.js"></script>
@@ -58,7 +60,10 @@
         }
         setInterval(function () {
             document.getElementById('fps').innerHTML = window.application.actualFPS.toFixed(2);
+            document.getElementById('raindrops').innerHTML = window.application.currentRaindropNumber;
         }, 1000);
+
+        // TODO add a input text to breakthrought the limit of the slider (e.g. change max value)
     </script>
 </body>
 
