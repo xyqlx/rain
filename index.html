@@ -15,14 +15,63 @@
         <span id="fps"></span>
         <span>raindrops: </span>
         <span id="raindrops"></span>
-        <button>reset</button>
+        <button id="restart">restart</button>
+        <button id="initParams">init params</button>
     </div>
     <script src="webgl.js"></script>
     <script>
+        // implementation of throttle
+        function throttle(mainFunction, delay) {
+            let timerFlag = null;
+            return (...args) => {
+                if (timerFlag === null) {
+                    mainFunction(...args);
+                    timerFlag = setTimeout(() => {
+                        timerFlag = null;
+                    }, delay);
+                }
+            };
+        }
+        const initValues = new Map();
         // function bind
-        function bind(attribute, min, max, step) {
+        function bind(attribute, min, max) {
             option = document.getElementById('option');
+            // add to initValues
+            initValues.set(attribute, [window.application[attribute] ,min, max]);
+            // check if query parameter is set
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has(attribute)) {
+                window.application[attribute] = parseFloat(urlParams.get(attribute));
+            }
             const value = window.application[attribute];
+            // update min and max if necessary
+            if (value < min) {
+                if(min > 0){
+                    if (value > 0){
+                        max = max * value / min;
+                        min = value;
+                    }
+                }
+                else if (min < 0){
+                    max = max * value / min;
+                    min = value;
+                }
+            }
+            else if (value > max) {
+                if(max > 0){
+                    min = min * value / max;
+                    max = value;
+                }
+                else if (max < 0){
+                    if (value < 0){
+                        min = min * value / max;
+                        max = value;
+                    }
+                }
+            }
+            // set step to 1/100 of the order of magnitude of the range
+            step = Math.pow(10, Math.floor(Math.log10(max - min)))/100;
+            // create slider
             const slider = document.createElement('input');
             slider.setAttribute('type', 'range');
             slider.setAttribute('min', min);
@@ -42,21 +91,45 @@
             spanValue.innerHTML = value;
             container.appendChild(spanValue);
             option.appendChild(container);
-            slider.oninput = function () {
-                spanValue.innerHTML = this.value;
-                window.application[attribute] = parseFloat(this.value);
-            }
+            slider.oninput = throttle(() => {
+                spanValue.innerHTML = slider.value;
+                window.application[attribute] = parseFloat(slider.value);
+                // update url
+                urlParams.set(attribute, slider.value);
+                window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
+            }, 100);
         }
-        bind('startPostion', -1.0, 1.0, 0.01);
-        bind('k', 0, 0.2, 0.001);
-        bind('density', 0, 0.2, 0.001);
-        bind('spread', 0, 1, 0.01);
-        bind('piova', 0, 200, 1);
-        bind('raindropVelocity', 0.01, 1, 0.01);
-        bind('windVelocity', -0.1, 0.1, 0.001);
-        const resetButton = document.querySelector("button");
-        resetButton.onclick = function () {
+
+        function initParams(){
+            for (const [attribute, value] of initValues.entries()) {
+                window.application[attribute] = value[0];
+                document.getElementById(attribute).value = value[0];
+                document.getElementById(attribute + 'Value').innerHTML = value[0];
+                document.getElementById(attribute).setAttribute('min', value[1]);
+                document.getElementById(attribute).setAttribute('max', value[2]);
+            }
+            // clear url params
+            const urlParams = new URLSearchParams(window.location.search);
+            for (const attribute of initValues.keys()) {
+                urlParams.delete(attribute);
+            }
+            window.history.replaceState({}, '', `${location.pathname}?${urlParams}`);
+        }
+
+        bind('startPostion', -1.0, 1.0);
+        bind('k', 0, 0.2);
+        bind('density', 0, 0.2);
+        bind('spread', 0, 1);
+        bind('piova', 0, 200);
+        bind('raindropVelocity', 0.01, 1);
+        bind('windVelocity', -0.1, 0.1);
+        const restartButton = document.querySelector("#restart");
+        restartButton.onclick = function () {
             window.application.reset();
+        }
+        const initButton = document.querySelector("#initParams");
+        initButton.onclick = function () {
+            initParams();
         }
         setInterval(function () {
             document.getElementById('fps').innerHTML = window.application.actualFPS.toFixed(2);

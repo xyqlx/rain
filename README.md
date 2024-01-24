@@ -20,6 +20,11 @@ open `index.html` in your browser
 | raindropVelocity | the vertical velocity of rain |
 | windVelocity | the horizontal velocity of rain |
 
+## Other features
+
+- Parameter's value can be initialized by url parameters
+- Url parameter will be updated when you change the value of the parameter
+
 ## Problems
 
 - If you toggle the page to background and then toggle back, the animation may be paused
@@ -60,4 +65,4 @@ I change 'draw gl.TRIANGLE_FAN in a for loop' to 'draw gl.TRIANGLES in a single 
 ## TODO
 
 - [ ] Modify the UI to provide a way beyond the limitations of the slider
-- [ ] Bind parameters to URL query part
+- [ ] Balance the raindrops in different position (make sure the water level is horizontal when k is 0)
