@@ -22,7 +22,8 @@ open `index.html` in your browser
 
 ## Other features
 
-- Parameter's value can be initialized by url parameters
+- The value of the parameter can be initialized by url parameters
+- The value of the parameter can also be changed in the input box (can breakthrough the limit of the range)
 - Url parameter will be updated when you change the value of the parameter
 
 ## Problems
@@ -64,5 +65,4 @@ I change 'draw gl.TRIANGLE_FAN in a for loop' to 'draw gl.TRIANGLES in a single 
 
 ## TODO
 
-- [ ] Modify the UI to provide a way beyond the limitations of the slider
 - [ ] Balance the raindrops in different position (make sure the water level is horizontal when k is 0)

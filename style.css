@@ -28,6 +28,19 @@
     margin-top: 10px;
 }
 
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+input.slider.change {
+    animation: fadeIn 1s infinite alternate;
+}
+
 body {
     background-color: #cfcfcf;
     margin: 0;
